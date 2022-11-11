@@ -35,6 +35,7 @@ set(bmalloc_SOURCES
     bmalloc/ObjectType.cpp
     bmalloc/ObjectTypeTable.cpp
     bmalloc/PerProcess.cpp
+    bmalloc/ProcessCheck.mm
     bmalloc/Scavenger.cpp
     bmalloc/bmalloc.cpp
 

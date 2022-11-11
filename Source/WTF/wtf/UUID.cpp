@@ -42,6 +42,7 @@
 
 #if OS(DARWIN)
 #include <sys/sysctl.h>
+#include <wtf/NeverDestroyed.h>
 #endif
 
 namespace WTF {

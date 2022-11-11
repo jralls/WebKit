@@ -31,6 +31,9 @@
 #include <WebCore/NotificationResources.h>
 #include <WebCore/RefPtrCairo.h>
 #include <cairo.h>
+#if !OS(DARWIN)
+#include <gio/gdesktopappinfo.h>
+#endif
 #include <gio/gio.h>
 #include <glib/gi18n-lib.h>
 #include <mutex>
@@ -311,14 +314,17 @@ static const char* applicationIcon(const char* applicationID)
 #endif
 
             GUniquePtr<char> desktopFileID(g_strdup_printf("%s.desktop", applicationID));
+#if !OS(DARWIN)
             GRefPtr<GDesktopAppInfo> appInfo = adoptGRef(g_desktop_app_info_new(desktopFileID.get()));
             if (!appInfo)
                 return { };
 
             auto* icon = g_app_info_get_icon(G_APP_INFO(appInfo.get()));
+#else
+            void* icon = nullptr;
+#endif
             if (!icon)
                 return { };
-
             if (G_IS_FILE_ICON(icon)) {
                 GUniquePtr<char> uri(g_file_get_uri(g_file_icon_get_file(G_FILE_ICON(icon))));
                 return uri.get();

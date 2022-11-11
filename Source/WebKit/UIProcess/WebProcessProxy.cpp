@@ -1046,7 +1046,7 @@ bool WebProcessProxy::didReceiveSyncMessage(IPC::Connection& connection, IPC::De
 
 void WebProcessProxy::didClose(IPC::Connection& connection)
 {
-#if OS(DARWIN)
+#if PLATFORM(COCOA)
     WEBPROCESSPROXY_RELEASE_LOG_ERROR(Process, "didClose: (web process %d crash)", connection.remoteProcessID());
 #else
     WEBPROCESSPROXY_RELEASE_LOG_ERROR(Process, "didClose (web process crash)");

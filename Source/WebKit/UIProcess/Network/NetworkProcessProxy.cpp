@@ -469,7 +469,7 @@ bool NetworkProcessProxy::didReceiveSyncMessage(IPC::Connection& connection, IPC
 
 void NetworkProcessProxy::didClose(IPC::Connection& connection)
 {
-#if OS(DARWIN)
+#if PLATFORM(COCOA)
     RELEASE_LOG_ERROR(Process, "%p - NetworkProcessProxy::didClose (Network Process %d crash)", this, connection.remoteProcessID());
 #else
     RELEASE_LOG_ERROR(Process, "%p - NetworkProcessProxy::didClose (Network Process crash)", this);

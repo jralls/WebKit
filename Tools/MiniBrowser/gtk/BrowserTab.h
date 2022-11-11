@@ -27,6 +27,7 @@
 #define BrowserTab_h
 
 #include <gtk/gtk.h>
+#define WTF_PLATFORM_GTK 1
 
 #if GTK_CHECK_VERSION(3, 98, 0)
 #include <webkit/webkit.h>

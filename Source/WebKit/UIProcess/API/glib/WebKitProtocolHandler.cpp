@@ -61,6 +61,12 @@
 #include <WebCore/PlatformDisplayGBM.h>
 #include <WebCore/PlatformDisplaySurfaceless.h>
 #endif
+#if USE(LIBEPOXY)
+#include <epoxy/gl.h>
+#elif USE(OPENGL_ES)
+#include <GLES2/gl2.h>
+#elif USE(OPENGL)
+#include <WebCore/OpenGLShims.h>
 #endif
 
 #if USE(EGL)

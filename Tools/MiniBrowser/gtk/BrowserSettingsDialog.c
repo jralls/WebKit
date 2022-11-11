@@ -64,6 +64,7 @@ struct _BrowserSettingsDialogClass {
 
 G_DEFINE_TYPE(BrowserSettingsDialog, browser_settings_dialog, GTK_TYPE_DIALOG)
 
+#if (defined(WTF_PLATFORM_GTK) && WTF_PLATFORM_GTK)
 static const char *hardwareAccelerationPolicyToString(WebKitHardwareAccelerationPolicy policy)
 {
     switch (policy) {
@@ -96,6 +97,7 @@ static int stringToHardwareAccelerationPolicy(const char *policy)
     g_warning("Invalid value %s for hardware-acceleration-policy setting", policy);
     return -1;
 }
+#endif
 
 static void cellRendererChanged(GtkCellRenderer *renderer, const char *path, const GValue *value, BrowserSettingsDialog *dialog)
 {
@@ -107,6 +109,7 @@ static void cellRendererChanged(GtkCellRenderer *renderer, const char *path, con
     gboolean updateTreeStore = TRUE;
     char *name;
     gtk_tree_model_get(model, &iter, SETTINGS_LIST_COLUMN_NAME, &name, -1);
+#if (defined(WTF_PLATFORM_GTK) && WTF_PLATFORM_GTK)
     if (!g_strcmp0(name, "hardware-acceleration-policy")) {
         int policy = stringToHardwareAccelerationPolicy(g_value_get_string(value));
         if (policy != -1)
@@ -114,6 +117,7 @@ static void cellRendererChanged(GtkCellRenderer *renderer, const char *path, con
         else
             updateTreeStore = FALSE;
     } else
+#endif
         g_object_set_property(G_OBJECT(dialog->settings), name, value);
     g_free(name);
 
@@ -339,13 +343,16 @@ static void browserSettingsDialogConstructed(GObject *object)
         char *blurb = g_markup_escape_text(g_param_spec_get_blurb(property), -1);
 
         GValue value = { 0, { { 0 } } };
+#if (defined(WTF_PLATFORM_GTK) && WTF_PLATFORM_GTK)
         if (!g_strcmp0(name, "hardware-acceleration-policy")) {
             g_value_init(&value, G_TYPE_STRING);
             g_value_set_string(&value, hardwareAccelerationPolicyToString(webkit_settings_get_hardware_acceleration_policy(settings)));
             char *extendedBlutb = g_strdup_printf("%s (always, never or ondemand)", blurb);
             g_free(blurb);
             blurb = extendedBlutb;
-        } else {
+        } else
+#endif
+        {
             g_value_init(&value, G_PARAM_SPEC_VALUE_TYPE(property));
             g_object_get_property(G_OBJECT(settings), name, &value);
         }

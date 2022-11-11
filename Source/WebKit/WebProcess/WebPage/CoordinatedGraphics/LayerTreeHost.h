@@ -39,11 +39,15 @@
 #include <wtf/OptionSet.h>
 #include <wtf/RunLoop.h>
 
+
 #if USE(GRAPHICS_LAYER_TEXTURE_MAPPER)
 
 #include "LayerTreeHostTextureMapper.h"
 
 #else // USE(GRAPHICS_LAYER_TEXTURE_MAPPER)
+#if PLATFORM(GTK)
+#include <WebCore/FloatPoint.h>
+#endif
 
 namespace WebCore {
 class CoordinatedGraphicsLayer;

@@ -54,7 +54,7 @@ inline TextStream textStreamForLogging(const Connection& connection, MessageName
 {
     TextStream stream(TextStream::LineMode::SingleLine, { }, loggingContainerSizeLimit);
     stream << '[';
-#if OS(DARWIN)
+#if PLATFORM(COCOA)
     // The remote process ID is not available when the connection was not made
     // for an XPC service, e.g. for the Web -> GPU process connection.
     if (connection.remoteProcessID())

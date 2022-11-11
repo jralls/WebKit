@@ -141,7 +141,7 @@ public:
     Ref<WebCore::SharedBuffer> createSharedBuffer(size_t) const;
 
 private:
-#if OS(DARWIN)
+#if PLATFORM(COCOA)
     WTF::MachSendRight createSendRight(Protection) const;
 #endif
 

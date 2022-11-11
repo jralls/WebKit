@@ -53,7 +53,7 @@
 #include <wtf/unix/UnixFileDescriptor.h>
 #endif
 
-#if OS(DARWIN)
+#if PLATFORM(COCOA)
 #include <mach/mach_port.h>
 #include <wtf/MachSendRight.h>
 #include <wtf/OSObjectPtr.h>
@@ -229,7 +229,7 @@ public:
 #endif
     };
 
-#if OS(DARWIN)
+#if PLATFORM(COCOA)
     xpc_connection_t xpcConnection() const { return m_xpcConnection.get(); }
     std::optional<audit_token_t> getAuditToken();
     pid_t remoteProcessID() const;

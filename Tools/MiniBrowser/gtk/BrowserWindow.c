@@ -35,6 +35,7 @@
 #include "BrowserTab.h"
 #include <gdk/gdkkeysyms.h>
 #include <string.h>
+#include <inttypes.h>
 
 struct _BrowserWindow {
     GtkApplicationWindow parent;
@@ -254,7 +255,7 @@ static void browserWindowCreateBackForwardMenu(BrowserWindow *window, GList *lis
 #endif
 #undef MAX_TITLE
 
-        char *actionName = g_strdup_printf("action-%lu", ++actionId);
+        char *actionName = g_strdup_printf("action-%" PRIu64, ++actionId);
         GSimpleAction *action = g_simple_action_new(actionName, NULL);
         g_object_set_data_full(G_OBJECT(action), "back-forward-list-item", g_object_ref(item), g_object_unref);
         g_signal_connect_swapped(action, "activate", G_CALLBACK(browserWindowHistoryItemActivated), window);
