@@ -89,6 +89,9 @@ public:
         GBM,
 #endif
 #endif
+#if PLATFORM(QUARTZ)
+        Quartz,
+#endif
     };
 
     virtual Type type() const = 0;

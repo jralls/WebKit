@@ -113,6 +113,34 @@ typedef EGLBoolean (*PFNEGLDESTROYIMAGEKHRPROC) (EGLDisplay, EGLImageKHR);
 
 namespace WebCore {
 
+#if PLATFORM(QUARTZ)
+
+class PlatformDisplayQuartz : public PlatformDisplay {
+public:
+    static std::unique_ptr<PlatformDisplay> create();
+#if PLATFORM(GTK)
+    static std::unique_ptr<PlatformDisplay> create(GdkDisplay* display) {
+        return std::make_unique<PlatformDisplayQuartz>(display);
+    }
+#endif
+    virtual ~PlatformDisplayQuartz() = default;
+
+#if PLATFORM(GTK)
+    explicit PlatformDisplayQuartz(GdkDisplay* display) :
+        PlatformDisplay(display) {}
+#endif
+private:
+    Type type() const final { return PlatformDisplay::Type::Quartz; }
+
+};
+
+} // namespace WebCore
+
+SPECIALIZE_TYPE_TRAITS_PLATFORM_DISPLAY(PlatformDisplayQuartz, Quartz)
+
+namespace WebCore {
+#endif
+
 std::unique_ptr<PlatformDisplay> PlatformDisplay::createPlatformDisplay()
 {
 #if PLATFORM(GTK)
@@ -126,6 +154,10 @@ std::unique_ptr<PlatformDisplay> PlatformDisplay::createPlatformDisplay()
 #if PLATFORM(WAYLAND)
         if (GDK_IS_WAYLAND_DISPLAY(display))
             return PlatformDisplayWayland::create(display);
+#endif
+
+#if PLATFORM(QUARTZ) && defined(GDK_WINDOWING_QUARTZ)
+        return PlatformDisplayQuartz::create(display);
 #endif
     }
 #endif // PLATFORM(GTK)
