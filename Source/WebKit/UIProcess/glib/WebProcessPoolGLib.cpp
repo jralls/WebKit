@@ -34,7 +34,10 @@
 #include "WebProcessCreationParameters.h"
 #include <WebCore/PlatformDisplay.h>
 #include <wtf/FileSystem.h>
+
+#if ENABLE(BUBBLEWRAP_SANDBOX)
 #include <wtf/glib/Sandbox.h>
+#endif
 
 #if ENABLE(REMOTE_INSPECTOR)
 #include <JavaScriptCore/RemoteInspector.h>
@@ -137,12 +140,13 @@ void WebProcessPool::platformInitializeWebProcess(const WebProcessProxy& process
         if (auto* address = getenv("WEBKIT_A11Y_BUS_ADDRESS"))
             return String::fromUTF8(address);
 
+#if ENABLE(BUBBLEWRAP_SANDBOX)
         if (m_sandboxEnabled) {
             String& address = sandboxedAccessibilityBusAddress();
             if (!address.isNull())
                 return address;
         }
-
+#endif
         return WebCore::PlatformDisplay::sharedDisplay().accessibilityBusAddress();
     }();
 #endif

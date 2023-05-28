@@ -39,9 +39,12 @@
 #include <wtf/RunLoop.h>
 #include <wtf/UniStdExtras.h>
 #include <wtf/glib/GUniquePtr.h>
-#include <wtf/glib/Sandbox.h>
 #include <wtf/text/CString.h>
 #include <wtf/text/WTFString.h>
+
+#if ENABLE(BUBBLEWRAP_SANDBOX)
+#include <wtf/glib/Sandbox.h>
+#endif
 
 #if USE(LIBWPE)
 #include "ProcessProviderLibWPE.h"
@@ -91,7 +94,7 @@ static int connectionOptions()
 
 static bool isSandboxEnabled(const ProcessLauncher::LaunchOptions& launchOptions)
 {
-#if !USE(SYSTEM_MALLOC)
+#if !USE(SYSTEM_MALLOC) && !__APPLE__
     if (RUNNING_ON_VALGRIND)
         return false;
 #endif

@@ -28,9 +28,17 @@
 
 #include <gio/gio.h>
 #include <wtf/glib/GUniquePtr.h>
+#if ENABLE(BUBBLEWRAP_SANDBOX)
 #include <wtf/glib/Sandbox.h>
+#endif
 
 namespace PAL {
+
+#if ENABLE(BUBBLEWRAP_SANDBOX)
+    static const bool should_use_portal{shouldUserPortal()};
+#else
+    static const bool should_use_portal{false};
+#endif
 
 std::unique_ptr<SleepDisabler> SleepDisabler::create(const String& reason, Type type)
 {
@@ -50,9 +58,9 @@ SleepDisablerGLib::SleepDisablerGLib(const String& reason, Type type)
     // ever need this distinction, which seems unlikely, then we'll need to
     // audit all use of SleepDisabler.
 
-    const char* busName = shouldUsePortal() ? "org.freedesktop.portal.Desktop" : "org.freedesktop.ScreenSaver";
-    const char* objectPath = shouldUsePortal() ? "/org/freedesktop/portal/desktop" : "/org/freedesktop/ScreenSaver";
-    const char* interfaceName = shouldUsePortal() ? "org.freedesktop.portal.Inhibit" : "org.freedesktop.ScreenSaver";
+    const char* busName = should_use_portal ? "org.freedesktop.portal.Desktop" : "org.freedesktop.ScreenSaver";
+    const char* objectPath = should_use_portal ? "/org/freedesktop/portal/desktop" : "/org/freedesktop/ScreenSaver";
+    const char* interfaceName = should_use_portal ? "org.freedesktop.portal.Inhibit" : "org.freedesktop.ScreenSaver";
     g_dbus_proxy_new_for_bus(G_BUS_TYPE_SESSION, static_cast<GDBusProxyFlags>(G_DBUS_PROXY_FLAGS_DO_NOT_LOAD_PROPERTIES | G_DBUS_PROXY_FLAGS_DO_NOT_CONNECT_SIGNALS),
         nullptr, busName, objectPath, interfaceName, m_cancellable.get(), [](GObject*, GAsyncResult* result, gpointer userData) {
         GUniqueOutPtr<GError> error;
@@ -86,7 +94,7 @@ SleepDisablerGLib::~SleepDisablerGLib()
 void SleepDisablerGLib::acquireInhibitor()
 {
     GVariant* parameters;
-    if (shouldUsePortal()) {
+    if (should_use_portal) {
         GVariantBuilder builder;
         g_variant_builder_init(&builder, G_VARIANT_TYPE_VARDICT);
         g_variant_builder_add(&builder, "{sv}", "reason", g_variant_new_string(m_reason.utf8().data()));
@@ -105,7 +113,7 @@ void SleepDisablerGLib::acquireInhibitor()
             g_warning("Calling %s.Inhibit failed: %s", g_dbus_proxy_get_interface_name(G_DBUS_PROXY(proxy)), error->message);
         else {
             ASSERT(returnValue);
-            if (shouldUsePortal())
+            if (should_use_portal)
                 g_variant_get(returnValue.get(), "(o)", &self->m_inhibitPortalRequestObjectPath.outPtr());
             else
                 g_variant_get(returnValue.get(), "(u)", &self->m_screenSaverCookie);
@@ -116,7 +124,7 @@ void SleepDisablerGLib::acquireInhibitor()
 
 void SleepDisablerGLib::releaseInhibitor()
 {
-    if (!shouldUsePortal()) {
+    if (!should_use_portal) {
         ASSERT(m_screenSaverCookie);
         g_dbus_proxy_call(m_screenSaverProxy.get(), "UnInhibit", g_variant_new("(u)", m_screenSaverCookie), G_DBUS_CALL_FLAGS_NONE, -1, nullptr, [](GObject* proxy, GAsyncResult* result, gpointer) {
             GUniqueOutPtr<GError> error;

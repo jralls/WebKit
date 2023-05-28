@@ -46,8 +46,11 @@
 #include <wtf/UUID.h>
 #include <wtf/glib/GUniquePtr.h>
 #include <wtf/glib/RunLoopSourcePriority.h>
-#include <wtf/glib/Sandbox.h>
 #include <wtf/text/CString.h>
+
+#if ENABLE(BUBBLEWRAP_SANDBOX)
+#include <wtf/glib/Sandbox.h>
+#endif
 
 #if PLATFORM(GTK)
 #include <WebCore/GtkVersioning.h>
@@ -242,11 +245,17 @@ NotificationService& NotificationService::singleton()
     return service;
 }
 
+static bool should_use_portal{false};
+#if ENABLE(BUBBLEWRAP_SANDBOX)
+should_use_portal = shouldUsePortal();
+#endif
+
+
 NotificationService::NotificationService()
 {
-    const char* busName = shouldUsePortal() ? "org.freedesktop.portal.Desktop" : "org.freedesktop.Notifications";
-    const char* objectPath = shouldUsePortal() ? "/org/freedesktop/portal/desktop" : "/org/freedesktop/Notifications";
-    const char* interfaceName = shouldUsePortal() ? "org.freedesktop.portal.Notification" : "org.freedesktop.Notifications";
+    const char* busName = should_use_portal ? "org.freedesktop.portal.Desktop" : "org.freedesktop.Notifications";
+    const char* objectPath = should_use_portal ? "/org/freedesktop/portal/desktop" : "/org/freedesktop/Notifications";
+    const char* interfaceName = should_use_portal ? "org.freedesktop.portal.Notification" : "org.freedesktop.Notifications";
     GUniqueOutPtr<GError> error;
     m_proxy = g_dbus_proxy_new_for_bus_sync(G_BUS_TYPE_SESSION, G_DBUS_PROXY_FLAGS_DO_NOT_LOAD_PROPERTIES, nullptr, busName, objectPath, interfaceName, nullptr, &error.outPtr());
     if (!m_proxy) {
@@ -254,7 +263,7 @@ NotificationService::NotificationService()
         return;
     }
 
-    if (!shouldUsePortal()) {
+    if (!should_use_portal) {
         GRefPtr<GVariant> capabilities = adoptGRef(g_dbus_proxy_call_sync(m_proxy.get(), "GetCapabilities", nullptr, G_DBUS_CALL_FLAGS_NONE, s_dbusCallTimeout.millisecondsAs<int>(), nullptr, &error.outPtr()));
         if (!capabilities) {
             g_warning("Failed to get capabilities from notification server: %s", error->message);
@@ -366,7 +375,7 @@ bool NotificationService::showNotification(const WebNotification& notification, 
     auto addResult = m_notifications.add(notification.notificationID(), findNotificationByTag(notification.tag()));
     addResult.iterator->value.iconURL = notification.iconURL();
 
-    if (shouldUsePortal()) {
+    if (should_use_portal) {
         GVariantBuilder builder;
         g_variant_builder_init(&builder, G_VARIANT_TYPE_VARDICT);
 
@@ -454,7 +463,7 @@ void NotificationService::cancelNotification(uint64_t webNotificationID)
     if (it == m_notifications.end())
         return;
 
-    if (shouldUsePortal()) {
+    if (should_use_portal) {
         if (it->value.portalID.isEmpty())
             return;
 

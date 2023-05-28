@@ -9,7 +9,6 @@ list(APPEND WTF_PUBLIC_HEADERS
     glib/GUniquePtr.h
     glib/GWeakPtr.h
     glib/RunLoopSourcePriority.h
-    glib/Sandbox.h
     glib/SocketConnection.h
     glib/WTFGType.h
 
@@ -39,7 +38,6 @@ list(APPEND WTF_SOURCES
     glib/GRefPtr.cpp
     glib/GSocketMonitor.cpp
     glib/RunLoopGLib.cpp
-    glib/Sandbox.cpp
     glib/SocketConnection.cpp
     glib/URLGLib.cpp
 
@@ -54,6 +52,11 @@ list(APPEND WTF_SOURCES
     unix/LoggingUnix.cpp
     unix/UniStdExtrasUnix.cpp
 )
+
+if (ENABLE_BUBBLEWRAP_SANDBOX)
+  list(APPEND WTF_HEADERS glib/Sandbox.h)
+  list(APPEND WTF_SOURCES glib/Sandbox.cpp)
+endif()
 
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
     list(APPEND WTF_SOURCES
