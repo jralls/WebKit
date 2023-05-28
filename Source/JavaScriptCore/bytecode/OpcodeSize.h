@@ -26,6 +26,7 @@
 #pragma once
 
 #include <type_traits>
+#include "JSExportMacros.h"
 
 namespace JSC {
 

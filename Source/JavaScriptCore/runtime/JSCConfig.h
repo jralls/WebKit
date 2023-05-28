@@ -29,6 +29,7 @@
 #include "Opcode.h"
 #include "OptionsList.h"
 #include "SecureARM64EHashPins.h"
+#include "JSExportMacros.h"
 #include <wtf/WTFConfig.h>
 
 namespace JSC {

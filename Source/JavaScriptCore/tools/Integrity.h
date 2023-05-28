@@ -28,7 +28,7 @@
 #include <wtf/AccessibleAddress.h>
 #include <wtf/Assertions.h>
 #include <wtf/Lock.h>
-
+#include "JSExportMacros.h"
 #if OS(DARWIN)
 #include <mach/vm_param.h>
 #endif

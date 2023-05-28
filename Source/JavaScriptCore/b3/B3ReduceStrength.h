@@ -26,6 +26,7 @@
 #pragma once
 
 #if ENABLE(B3_JIT)
+#include "JSExportMacros.h"
 
 namespace JSC { namespace B3 {
 

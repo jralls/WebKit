@@ -19,7 +19,8 @@ list(APPEND JavaScriptCore_SOURCES
 )
 
 list(APPEND JavaScriptCore_PRIVATE_INCLUDE_DIRECTORIES
-    "${JAVASCRIPTCORE_DIR}/API/glib"
+  "${JAVASCRIPTCORE_DIR}/API/glib"
+  "${JAVASCRIPTCORE_DIR}/runtime"
     "${JavaScriptCoreGLib_DERIVED_SOURCES_DIR}"
     "${JavaScriptCoreGLib_DERIVED_SOURCES_DIR}/jsc"
     "${JavaScriptCoreGLib_FRAMEWORK_HEADERS_DIR}"

@@ -28,6 +28,7 @@
 #include "BytecodeIndex.h"
 
 #include <limits.h>
+#include "JSExportMacros.h"
 #include <wtf/HashMap.h>
 #include <wtf/MathExtras.h>
 #include <wtf/PrintStream.h>

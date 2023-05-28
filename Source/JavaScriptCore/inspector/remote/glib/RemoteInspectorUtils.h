@@ -27,6 +27,7 @@
 
 #if ENABLE(REMOTE_INSPECTOR)
 
+#include "JSExportMacros.h"
 #include <wtf/glib/GRefPtr.h>
 #include <wtf/text/CString.h>
 

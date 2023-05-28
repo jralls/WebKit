@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include "JSExportMacros.h"
 #include <wtf/RefCounted.h>
 
 namespace JSC {

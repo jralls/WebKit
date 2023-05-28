@@ -27,6 +27,7 @@
 #pragma once
 
 #include <optional>
+#include "JSExportMacros.h"
 #include <wtf/Forward.h>
 
 namespace JSC { namespace Yarr {

@@ -25,6 +25,7 @@
 
 #pragma once
 
+#include "JSExportMacros.h"
 #include "InspectorFrontendDispatchers.h"
 #include "InspectorRuntimeAgent.h"
 

@@ -26,6 +26,7 @@
 #pragma once
 
 #include "ConsoleTypes.h"
+#include "JSExportMacros.h"
 #include <wtf/Forward.h>
 #include <wtf/WeakPtr.h>
 

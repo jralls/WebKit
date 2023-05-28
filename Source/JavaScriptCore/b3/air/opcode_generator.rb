@@ -531,6 +531,8 @@ end
 writeH("Opcode") {
     | outp |
     outp.puts "#if ENABLE(B3_JIT)"
+    outp.puts "#include \"JSExportMacros.h\""
+
     outp.puts "namespace JSC { namespace B3 { namespace Air {"
     outp.puts "enum Opcode : int16_t {"
     $opcodes.keys.each {

@@ -43,6 +43,7 @@
 #pragma once
 
 #include "DateInstanceCache.h"
+#include "JSExportMacros.h"
 #include <wtf/DateMath.h>
 #include <wtf/GregorianDateTime.h>
 

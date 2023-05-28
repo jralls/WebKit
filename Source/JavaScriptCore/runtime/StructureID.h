@@ -27,6 +27,7 @@
 
 #include "JSCConfig.h"
 #include "MarkedBlock.h"
+#include <wtf/CompactPtr.h>
 #include <wtf/HashTraits.h>
 #include <wtf/StdIntExtras.h>
 

@@ -26,6 +26,7 @@
 #pragma once
 
 #include <atomic>
+#include "JSExportMacros.h"
 
 namespace JSC {
 

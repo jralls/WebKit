@@ -20,6 +20,7 @@
 #pragma once
 
 #include "JSCContext.h"
+#include "JSExportMacros.h"
 #include "JSCValue.h"
 #include <wtf/glib/GRefPtr.h>
 

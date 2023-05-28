@@ -29,6 +29,7 @@
 #pragma once
 
 #include "JSRunLoopTimer.h"
+#include "JSExportMacros.h"
 #include <wtf/RefPtr.h>
 
 #if USE(CF)
