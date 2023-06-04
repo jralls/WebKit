@@ -76,6 +76,7 @@
 #if USE(GSTREAMER)
 #include <gst/gst.h>
 #endif
+#endif
 
 namespace WebKit {
 using namespace WebCore;
