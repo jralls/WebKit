@@ -4,7 +4,7 @@
 #  UNIFDEF_EXECUTABLE: the full path to the unifdef tool.
 #  UNIFDEF_FOUND: True if unifdef has been found.
 
-find_program(UNIFDEF_EXECUTABLE unifdef)
+find_program(UNIFDEF_EXECUTABLE unifdef HINTS $ENV{PREFIX})
 
 # handle the QUIETLY and REQUIRED arguments and set UNIFDEF_FOUND to TRUE if
 # all listed variables are TRUE
